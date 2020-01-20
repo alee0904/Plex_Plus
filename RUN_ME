@@ -1,44 +1,5 @@
 #!/bin/bash
 
-while true ; do
-    echo "What would you like to do?"
-    echo ""
-    echo ""
-    echo "1. Plex Install or Update Manually"
-    echo "2. Install Plex via REPO"
-    echo "3. Update Plex via REPO (Must have run above option previously)"
-    echo "4. Install xTeve"
-    echo "5. Exit"
-
-    read INPUT
-    if [ $INPUT -eq 1 ] ; then
-        echo "Installing or Updating Plex"
-        echo "..."
-        PLEX_INSTALL_UPDATE_MANUAL
-
-    elif [ $INPUT -eq 2 ] ; then
-        echo "Installing Plex via Repo"
-        echo "..."
-        PLEX_INSTALL_VIA_REPO
-
-    elif [ $INPUT -eq 3 ] ; then
-        echo "Updating Plex Via Repo"
-        echo "..."
-        PLEX_UPDATE_VIA_REPO
-
-    elif [ $INPUT -eq 4 ] ; then
-        echo "Installing xTeve"
-        echo "..."
-        XTEVE_INSTALL
-
-    elif [ $INPUT -eq 5 ] ; then
-		echo "Exiting"
-		echo "..."
-        exit 0
-    else
-        echo "invalid choice"
-    fi
-done
 
 ########PLEX INSTALL/UPDATE MANUAL########
 function PLEX_INSTALL_UPDATE_MANUAL {
@@ -133,3 +94,43 @@ systemctl enable xteve.service
 systemctl start xteve.service
 
 }
+
+while true ; do
+    echo "What would you like to do?"
+    echo ""
+    echo ""
+    echo "1. Plex Install or Update Manually"
+    echo "2. Install Plex via REPO"
+    echo "3. Update Plex via REPO (Must have run above option previously)"
+    echo "4. Install xTeve"
+    echo "5. Exit"
+
+    read INPUT
+    if [ $INPUT -eq 1 ] ; then
+        echo "Installing or Updating Plex"
+        echo "..."
+        PLEX_INSTALL_UPDATE_MANUAL
+
+    elif [ $INPUT -eq 2 ] ; then
+        echo "Installing Plex via Repo"
+        echo "..."
+        PLEX_INSTALL_VIA_REPO
+
+    elif [ $INPUT -eq 3 ] ; then
+        echo "Updating Plex Via Repo"
+        echo "..."
+        PLEX_UPDATE_VIA_REPO
+
+    elif [ $INPUT -eq 4 ] ; then
+        echo "Installing xTeve"
+        echo "..."
+        XTEVE_INSTALL
+
+    elif [ $INPUT -eq 5 ] ; then
+		echo "Exiting"
+		echo "..."
+        exit 0
+    else
+        echo "invalid choice"
+    fi
+done
