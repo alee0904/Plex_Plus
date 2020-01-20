@@ -78,7 +78,9 @@ chmod +x /usr/local/xteve/xteve |& adddate >> /var/log/Plex_Plus
 read -p "Enter User for systemd xTeve service (needs to have priviledged rights):" service_user
 read -p "Enter Group for systemd xTeve service (needs to have priviledged rights):" service_group
 
-echo '
+rm /etc/systemd/system/xteve.service
+
+echo "
 
 [Unit]
 Description=xTeVe Service
@@ -94,12 +96,17 @@ KillMode=process
 Restart=always
 RestartSec=15
 
-User=$service_user
-Group=$service_group
+" >/etc/systemd/system/xteve.service
+
+echo User=$service_user  >>/etc/systemd/system/xteve.service
+echo Group=$service_group  >>/etc/systemd/system/xteve.service
+
+echo "
+
 [Install]
 WantedBy=multi-user.target
 
-' >/etc/systemd/system/xteve.service |& adddate >> /var/log/Plex_Plus
+" >>/etc/systemd/system/xteve.service
 
 systemctl enable xteve.service |& adddate >> /var/log/Plex_Plus
 systemctl start xteve.service |& adddate >> /var/log/Plex_Plus
