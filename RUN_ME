@@ -61,19 +61,24 @@ systemctl status plexmediaserver
 ########NVIDIA DRIVER########
 function NVIDIA_DRIVER {
 
-mkdir /opt/nvidia
+apt install -y ubuntu-drivers-common |& adddate >> /var/log/Plex_Plus
 
-rm /opt/nvidia/NVIDIA*.run
+ubuntu-drivers autoinstall |& adddate >> /var/log/Plex_Plus
 
-echo 'Go to https://github.com/keylase/nvidia-patch and right click on the Driver Link URL that you want to install and select "copy link address".'
+###BELOW IS FROM KEYLASE GITHUB HOWTO, HANDLING VIA APT INSTEAD###
+#mkdir /opt/nvidia
 
-read -p "Enter NVIDIA Driver URL:" NVIDIA_DRIVER_URL
+#rm /opt/nvidia/NVIDIA*.run
 
-wget -P /opt/nvidia $NVIDIA_DRIVER_URL
+#echo 'Go to https://github.com/keylase/nvidia-patch and right click on the Driver Link URL that you want to install and select "copy link address".'
 
-chmod +x /opt/nvidia/NVIDIA*.run
+#read -p "Enter NVIDIA Driver URL:" NVIDIA_DRIVER_URL
 
-/opt/nvidia/NVIDIA*.run
+#wget -P /opt/nvidia $NVIDIA_DRIVER_URL
+
+#chmod +x /opt/nvidia/NVIDIA*.run
+
+#/opt/nvidia/NVIDIA*.run
 
 }
 
@@ -423,7 +428,7 @@ while true ; do
         NVIDIA_DRIVER
 		
     elif [ $INPUT -eq 5 ] ; then 2>/dev/null
-        echo "Installing NVIDIA NVENC Session Patch"
+        echo "Installing NVIDIA NVENC Session Patch - Only needed for non Quadro cards"
         echo "..."
         NVIDIA_NVENC_SESSION_PATCH
 
