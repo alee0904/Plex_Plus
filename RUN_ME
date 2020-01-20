@@ -1,73 +1,81 @@
 #!/bin/bash
 
+# Creating program to add date/time to log output
+adddate() {
+    while IFS= read -r line; do
+        printf '%s %s\n' "$(date)" "$line";
+    done
+}
+
+logs_dated=|& adddate >> /var/log/Plex_Plus
 
 ########PLEX INSTALL/UPDATE MANUAL########
 function PLEX_INSTALL_UPDATE_MANUAL {
 
-rm -r /tmp/plex_install
-mkdir /tmp/plex_install
+rm -r /tmp/plex_install $logs_dated
+mkdir /tmp/plex_install $logs_dated
 
 read -p "Enter Plex download URL:" PLEX_URL
 
-wget -P /tmp/plex $PLEX_URL
+wget -P /tmp/plex $PLEX_URL $logs_dated
 
-sudo dpkg -i /tmp/plex/plexmediaserver*.deb
+sudo dpkg -i /tmp/plex/plexmediaserver*.deb $logs_dated
 
-sudo systemctl enable plexmediaserver.service
-sudo systemctl start plexmediaserver.service
+sudo systemctl enable plexmediaserver.service $logs_dated
+sudo systemctl start plexmediaserver.service $logs_dated
 
-rm -r /tmp/plex_install
+rm -r /tmp/plex_install $logs_dated
 
 }
 
 ########PLEX INSTALL VIA REPO - UBUNTU SERVER 18.04########
 function PLEX_INSTALL_VIA_REPO {
 
-curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -
+curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add - $logs_dated
 
-echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list
+echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list $logs_dated
 
-apt install -y apt-transport-https
-apt update
-apt install -y plexmediaserver
+apt install -y apt-transport-https $logs_dated
+apt update $logs_dated
+apt install -y plexmediaserver $logs_dated
 
-systemctl enable plexmediaserver
-systemctl start plexmediaserver
+systemctl enable plexmediaserver $logs_dated
+systemctl start plexmediaserver $logs_dated
 
 }
 
 ########PLEX UPDATE VIA REPO - UBUNTU SERVER 18.04 (OPTION ABOVE HAS TO BE RAN FIRST TO ADD REPO)########
 function PLEX_UPDATE_VIA_REPO {
 
-apt update
-apt --only-upgrade install -y plexmediaserver
+apt update $logs_dated
+apt --only-upgrade install -y plexmediaserver $logs_dated
 
-systemctl restart plexmediaserver
+systemctl restart plexmediaserver $logs_dated
 
 }
 
 ########XTEVE INSTALL########
 function XTEVE_INSTALL {
 
-rm -r /tmp/xteve
-rm -r /usr/local/xteve
-mkdir /tmp/xteve
+rm -r /tmp/xteve $logs_dated
+rm -r /usr/local/xteve $logs_dated
+mkdir /tmp/xteve $logs_dated
 
 echo 'Go to https://xteve.de/ and right click on the distribution that you want to install and select "copy link address".'
 
 read -p "Enter xTeve download URL:" XTEVE_URL
 
-wget -P /tmp/xteve $XTEVE_URL
+wget -P /tmp/xteve $XTEVE_URL $logs_dated
 
-apt install -y unzip
+apt install -y unzip $logs_dated
 
-mkdir /usr/local/xteve
+mkdir /usr/local/xteve $logs_dated
 
-unzip /tmp/xteve/xteve* -d /usr/local/xteve/
+unzip /tmp/xteve/xteve* -d /usr/local/xteve/ $logs_dated
 
-rm -r /tmp/xteve
+rm -r /tmp/xteve $logs_dated
 
-chmod +x /usr/local/xteve/xteve
+chmod +x /usr/local/xteve/xteve $logs_dated
 
 read -p "Enter User for systemd xTeve service (needs to have priviledged rights):" service_user
 read -p "Enter Group for systemd xTeve service (needs to have priviledged rights):" service_group
@@ -93,10 +101,10 @@ Group=$service_group
 [Install]
 WantedBy=multi-user.target
 
-' >/etc/systemd/system/xteve.service
+' >/etc/systemd/system/xteve.service $logs_dated
 
-systemctl enable xteve.service
-systemctl start xteve.service
+systemctl enable xteve.service $logs_dated
+systemctl start xteve.service $logs_dated
 
 }
 
