@@ -7,50 +7,48 @@ adddate() {
     done
 }
 
-logs_dated=|& adddate >> /var/log/Plex_Plus
-
 ########PLEX INSTALL/UPDATE MANUAL########
 function PLEX_INSTALL_UPDATE_MANUAL {
 
-rm -r /tmp/plex_install $logs_dated
-mkdir /tmp/plex_install $logs_dated
+rm -r /tmp/plex_install |& adddate >> /var/log/Plex_Plus
+mkdir /tmp/plex_install |& adddate >> /var/log/Plex_Plus
 
 read -p "Enter Plex download URL:" PLEX_URL
 
-wget -P /tmp/plex $PLEX_URL $logs_dated
+wget -P /tmp/plex $PLEX_URL |& adddate >> /var/log/Plex_Plus
 
-sudo dpkg -i /tmp/plex/plexmediaserver*.deb $logs_dated
+sudo dpkg -i /tmp/plex/plexmediaserver*.deb |& adddate >> /var/log/Plex_Plus
 
-sudo systemctl enable plexmediaserver.service $logs_dated
-sudo systemctl start plexmediaserver.service $logs_dated
+sudo systemctl enable plexmediaserver.service |& adddate >> /var/log/Plex_Plus
+sudo systemctl start plexmediaserver.service |& adddate >> /var/log/Plex_Plus
 
-rm -r /tmp/plex_install $logs_dated
+rm -r /tmp/plex_install |& adddate >> /var/log/Plex_Plus
 
 }
 
 ########PLEX INSTALL VIA REPO - UBUNTU SERVER 18.04########
 function PLEX_INSTALL_VIA_REPO {
 
-curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add - $logs_dated
+curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add - |& adddate >> /var/log/Plex_Plus
 
-echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list $logs_dated
+echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list |& adddate >> /var/log/Plex_Plus
 
-apt install -y apt-transport-https $logs_dated
-apt update $logs_dated
-apt install -y plexmediaserver $logs_dated
+apt install -y apt-transport-https |& adddate >> /var/log/Plex_Plus
+apt update |& adddate >> /var/log/Plex_Plus
+apt install -y plexmediaserver |& adddate >> /var/log/Plex_Plus
 
-systemctl enable plexmediaserver $logs_dated
-systemctl start plexmediaserver $logs_dated
+systemctl enable plexmediaserver |& adddate >> /var/log/Plex_Plus
+systemctl start plexmediaserver |& adddate >> /var/log/Plex_Plus
 
 }
 
 ########PLEX UPDATE VIA REPO - UBUNTU SERVER 18.04 (OPTION ABOVE HAS TO BE RAN FIRST TO ADD REPO)########
 function PLEX_UPDATE_VIA_REPO {
 
-apt update $logs_dated
-apt --only-upgrade install -y plexmediaserver $logs_dated
+apt update |& adddate >> /var/log/Plex_Plus
+apt --only-upgrade install -y plexmediaserver |& adddate >> /var/log/Plex_Plus
 
-systemctl restart plexmediaserver $logs_dated
+systemctl restart plexmediaserver |& adddate >> /var/log/Plex_Plus
 
 }
 
@@ -58,24 +56,24 @@ systemctl restart plexmediaserver $logs_dated
 function XTEVE_INSTALL {
 
 rm -r /tmp/xteve |& adddate >> /var/log/Plex_Plus
-rm -r /usr/local/xteve $logs_dated
-mkdir /tmp/xteve $logs_dated
+rm -r /usr/local/xteve |& adddate >> /var/log/Plex_Plus
+mkdir /tmp/xteve |& adddate >> /var/log/Plex_Plus
 
 echo 'Go to https://xteve.de/ and right click on the distribution that you want to install and select "copy link address".'
 
 read -p "Enter xTeve download URL:" XTEVE_URL
 
-wget -P /tmp/xteve $XTEVE_URL $logs_dated
+wget -P /tmp/xteve $XTEVE_URL |& adddate >> /var/log/Plex_Plus
 
-apt install -y unzip $logs_dated
+apt install -y unzip |& adddate >> /var/log/Plex_Plus
 
-mkdir /usr/local/xteve $logs_dated
+mkdir /usr/local/xteve |& adddate >> /var/log/Plex_Plus
 
-unzip /tmp/xteve/xteve* -d /usr/local/xteve/ $logs_dated
+unzip /tmp/xteve/xteve* -d /usr/local/xteve/ |& adddate >> /var/log/Plex_Plus
 
-rm -r /tmp/xteve $logs_dated
+rm -r /tmp/xteve |& adddate >> /var/log/Plex_Plus
 
-chmod +x /usr/local/xteve/xteve $logs_dated
+chmod +x /usr/local/xteve/xteve |& adddate >> /var/log/Plex_Plus
 
 read -p "Enter User for systemd xTeve service (needs to have priviledged rights):" service_user
 read -p "Enter Group for systemd xTeve service (needs to have priviledged rights):" service_group
@@ -101,10 +99,10 @@ Group=$service_group
 [Install]
 WantedBy=multi-user.target
 
-' >/etc/systemd/system/xteve.service $logs_dated
+' >/etc/systemd/system/xteve.service |& adddate >> /var/log/Plex_Plus
 
-systemctl enable xteve.service $logs_dated
-systemctl start xteve.service $logs_dated
+systemctl enable xteve.service |& adddate >> /var/log/Plex_Plus
+systemctl start xteve.service |& adddate >> /var/log/Plex_Plus
 
 }
 
