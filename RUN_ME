@@ -337,6 +337,29 @@ esac
 
 }
 
+########FSTAB NFS MOUNTING########
+function FSTAB_NFS_MOUNTING {
+
+apt update
+
+apt install nfs-common
+
+read -p "Enter IP of NFS Host:" IP_NFS_HOST
+read -p "Enter folder path on NFS Host 'example - /mnt/user/Share' :" NFS_PATH
+read -p "Enter the mount point for local client - /mnt/'folder name' :" SHARE_FOLDER
+
+mkdir -p /mnt/$SHARE_FOLDER
+
+echo $IP_NFS_HOST:$NFS_PATH    /mnt/$SHARE_FOLDER   nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0 >>/etc/fstab
+
+mount -a
+
+echo "********REBOOTING********"
+
+shutdown -r now
+
+}
+
 ########XTEVE INSTALL########
 function XTEVE_INSTALL {
 
@@ -407,8 +430,11 @@ while true ; do
     echo "3. Update Plex via REPO (Must have run above option previously)"
 	echo "4. NVIDIA Driver Install"
 	echo "5. NVIDIA NVENC Session Patch"
-    echo "6. Install xTeve"
-    echo "7. Exit"
+	echo "6. FSTAB NFS Mounting"
+    echo "7. Install xTeve"
+    echo "8. Exit"
+	echo ""
+    echo ""
 
     read INPUT
     if [ $INPUT -eq 1 ] ; then 2>/dev/null
@@ -437,11 +463,16 @@ while true ; do
         NVIDIA_NVENC_SESSION_PATCH
 
     elif [ $INPUT -eq 6 ] ; then 2>/dev/null
+        echo "FSTAB NFS Mounting"
+        echo "..."
+        FSTAB_NFS_MOUNTING
+		
+    elif [ $INPUT -eq 7 ] ; then 2>/dev/null
         echo "Installing xTeve"
         echo "..."
         XTEVE_INSTALL
 
-    elif [ $INPUT -eq 7 ] ; then 2>/dev/null
+    elif [ $INPUT -eq 8 ] ; then 2>/dev/null
 		echo "Exiting"
 		echo "..."
         exit 0
