@@ -50,13 +50,18 @@ systemctl restart plexmediaserver
 function XTEVE_INSTALL {
 
 rm -r /tmp/xteve
+rm -r /usr/local/xteve
 mkdir /tmp/xteve
+
+echo 'Go to https://xteve.de/ and right click on the distribution that you want to install and select "copy link address".'
 
 read -p "Enter xTeve download URL:" XTEVE_URL
 
 wget -P /tmp/xteve $XTEVE_URL
 
 apt install -y unzip
+
+mkdir /usr/local/xteve
 
 unzip /tmp/xteve/xteve* -d /usr/local/xteve/
 
