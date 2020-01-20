@@ -106,27 +106,27 @@ while true ; do
     echo "5. Exit"
 
     read INPUT
-    if [ $INPUT -eq 1 ] ; then
+    if [ $INPUT -eq 1 ] ; then 2>/dev/null
         echo "Installing or Updating Plex"
         echo "..."
         PLEX_INSTALL_UPDATE_MANUAL
 
-    elif [ $INPUT -eq 2 ] ; then
+    elif [ $INPUT -eq 2 ] ; then 2>/dev/null
         echo "Installing Plex via Repo"
         echo "..."
         PLEX_INSTALL_VIA_REPO
 
-    elif [ $INPUT -eq 3 ] ; then
+    elif [ $INPUT -eq 3 ] ; then 2>/dev/null
         echo "Updating Plex Via Repo"
         echo "..."
         PLEX_UPDATE_VIA_REPO
 
-    elif [ $INPUT -eq 4 ] ; then
+    elif [ $INPUT -eq 4 ] ; then 2>/dev/null
         echo "Installing xTeve"
         echo "..."
         XTEVE_INSTALL
 
-    elif [ $INPUT -eq 5 ] ; then
+    elif [ $INPUT -eq 5 ] ; then 2>/dev/null
 		echo "Exiting"
 		echo "..."
         exit 0
