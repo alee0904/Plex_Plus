@@ -65,6 +65,10 @@ apt install -y ubuntu-drivers-common |& adddate >> /var/log/Plex_Plus
 
 ubuntu-drivers autoinstall |& adddate >> /var/log/Plex_Plus
 
+echo "********REBOOTING********"
+
+shutdown -r now
+
 ###BELOW IS FROM KEYLASE GITHUB HOWTO, HANDLING VIA APT INSTEAD###
 #mkdir /opt/nvidia
 
