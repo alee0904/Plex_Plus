@@ -24,14 +24,16 @@ sudo systemctl start plexmediaserver.service |& adddate >> /var/log/Plex_Plus
 
 rm -r /tmp/plex_install |& adddate >> /var/log/Plex_Plus
 
+systemctl status plexmediaserver
+
 }
 
 ########PLEX INSTALL VIA REPO - UBUNTU SERVER 18.04########
 function PLEX_INSTALL_VIA_REPO {
 
-curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add - |& adddate >> /var/log/Plex_Plus
+curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -
 
-echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list |& adddate >> /var/log/Plex_Plus
+echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list
 
 apt install -y apt-transport-https |& adddate >> /var/log/Plex_Plus
 apt update |& adddate >> /var/log/Plex_Plus
@@ -39,6 +41,8 @@ apt install -y plexmediaserver |& adddate >> /var/log/Plex_Plus
 
 systemctl enable plexmediaserver |& adddate >> /var/log/Plex_Plus
 systemctl start plexmediaserver |& adddate >> /var/log/Plex_Plus
+
+systemctl status plexmediaserver
 
 }
 
@@ -49,6 +53,8 @@ apt update |& adddate >> /var/log/Plex_Plus
 apt --only-upgrade install -y plexmediaserver |& adddate >> /var/log/Plex_Plus
 
 systemctl restart plexmediaserver |& adddate >> /var/log/Plex_Plus
+
+systemctl status plexmediaserver
 
 }
 
