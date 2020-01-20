@@ -1,0 +1,135 @@
+#!/bin/bash
+
+while true ; do
+    echo "What would you like to do?"
+    echo ""
+    echo ""
+    echo "1. Plex Install or Update Manually"
+    echo "2. Install Plex via REPO"
+    echo "3. Update Plex via REPO (Must have run above option previously)"
+    echo "4. Install xTeve"
+    echo "5. Exit"
+
+    read INPUT
+    if [ $INPUT -eq 1 ] ; then
+        echo "Installing or Updating Plex"
+        echo "..."
+        PLEX_INSTALL_UPDATE_MANUAL
+
+    elif [ $INPUT -eq 2 ] ; then
+        echo "Installing Plex via Repo"
+        echo "..."
+        PLEX_INSTALL_VIA_REPO
+
+    elif [ $INPUT -eq 3 ] ; then
+        echo "Updating Plex Via Repo"
+        echo "..."
+        PLEX_UPDATE_VIA_REPO
+
+    elif [ $INPUT -eq 4 ] ; then
+        echo "Installing xTeve"
+        echo "..."
+        XTEVE_INSTALL
+
+    elif [ $INPUT -eq 5 ] ; then
+		echo "Exiting"
+		echo "..."
+        exit 0
+    else
+        echo "invalid choice"
+    fi
+done
+
+########PLEX INSTALL/UPDATE MANUAL########
+function PLEX_INSTALL_UPDATE_MANUAL {
+
+rm -r /tmp/plex_install
+mkdir /tmp/plex_install
+
+read -p "Enter Plex download URL:" PLEX_URL
+
+wget -P /tmp/plex $PLEX_URL
+
+sudo dpkg -i /tmp/plex/plexmediaserver*.deb
+
+sudo systemctl enable plexmediaserver.service
+sudo systemctl start plexmediaserver.service
+
+rm -r /tmp/plex_install
+
+}
+
+########PLEX INSTALL VIA REPO - UBUNTU SERVER 18.04########
+function PLEX_INSTALL_VIA_REPO {
+
+curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -
+
+echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list
+
+apt install -y apt-transport-https
+apt update
+apt install -y plexmediaserver
+
+systemctl enable plexmediaserver
+systemctl start plexmediaserver
+
+}
+
+########PLEX UPDATE VIA REPO - UBUNTU SERVER 18.04 (OPTION ABOVE HAS TO BE RAN FIRST TO ADD REPO)########
+function PLEX_UPDATE_VIA_REPO {
+
+apt update
+apt --only-upgrade install -y plexmediaserver
+
+systemctl restart plexmediaserver
+
+}
+
+########XTEVE INSTALL########
+function XTEVE_INSTALL {
+
+rm -r /tmp/xteve
+mkdir /tmp/xteve
+
+read -p "Enter xTeve download URL:" XTEVE_URL
+
+wget -P /tmp/xteve $XTEVE_URL
+
+apt install -y unzip
+
+unzip /tmp/xteve/xteve* -d /usr/local/xteve/
+
+rm -r /tmp/xteve
+
+chmod +x /usr/local/xteve/xteve
+
+read -p "Enter User for systemd xTeve service (needs to have priviledged rights):" service_user
+read -p "Enter Group for systemd xTeve service (needs to have priviledged rights):" service_group
+
+echo '
+
+[Unit]
+Description=xTeVe Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/xteve/xteve 
+ExecReload=/usr/bin/killall xteve
+ExecStop=/usr/bin/killall xteve
+KillMode=process
+Restart=always
+RestartSec=15
+
+User=$service_user
+Group=$service_group
+[Install]
+WantedBy=multi-user.target
+
+' >/etc/systemd/system/xteve.service
+
+systemctl enable xteve.service
+systemctl start xteve.service
+
+}
