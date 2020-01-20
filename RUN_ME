@@ -57,7 +57,7 @@ systemctl restart plexmediaserver $logs_dated
 ########XTEVE INSTALL########
 function XTEVE_INSTALL {
 
-rm -r /tmp/xteve $logs_dated
+rm -r /tmp/xteve |& adddate >> /var/log/Plex_Plus
 rm -r /usr/local/xteve $logs_dated
 mkdir /tmp/xteve $logs_dated
 
